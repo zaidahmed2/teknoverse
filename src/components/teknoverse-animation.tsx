@@ -4,22 +4,19 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import Link from 'next/link';
 import Typewriter from '@/components/typewriter';
 import { ArrowRight } from 'lucide-react';
 
-const sections = [
-  { id: 1, name: 'Home', imageUrl: 'https://i.ibb.co/Gvh937bv/img1.png' },
-  { id: 2, name: 'About', imageUrl: 'https://i.ibb.co/M5RgYHRy/img2.png' },
-  { id: 3, name: 'Products', imageUrl: 'https://i.ibb.co/NdNqcnFW/img3.png' },
-  { id: 4, name: 'Blog', imageUrl: 'https://i.ibb.co/3bDTSRs/img4.png' },
-  { id: 5, name: 'Contact', imageUrl: 'https://i.ibb.co/MytkQCwg/img5.png' },
-];
+type Section = { 
+  id: string | number; 
+  name: string; 
+  imageUrl: string 
+};
 
-const Card = ({ i, section, scrollYProgress }: { i: number; section: (typeof sections)[0]; scrollYProgress: MotionValue<number> }) => {
-  const total = sections.length;
+const Card = ({ i, section, total, scrollYProgress }: { i: number; section: Section; total: number; scrollYProgress: MotionValue<number> }) => {
   const inputRange = [ (i - 1) / total, i / total, (i + 1) / total ];
   
-  // This new range ensures the card is perfectly sharp for a wider part of its transition.
   const sharpFocusInputRange = [
     (i - 1) / total,
     (i - 0.4) / total,
@@ -29,7 +26,6 @@ const Card = ({ i, section, scrollYProgress }: { i: number; section: (typeof sec
 
   const scale = useTransform(scrollYProgress, inputRange, [1, 1.05, 1]);
   const x = useTransform(scrollYProgress, inputRange, ["25%", "0%", "-25%"]);
-  // Use the new input range to keep the blur at 0px when the card is in the center.
   const filter = useTransform(scrollYProgress, sharpFocusInputRange, ["blur(16px)", "blur(0px)", "blur(0px)", "blur(16px)"]);
   const opacity = useTransform(scrollYProgress, inputRange, [0.3, 1, 0.3]);
   const zIndex = useTransform(opacity, (val) => Math.round(val * 20));
@@ -53,6 +49,7 @@ const Card = ({ i, section, scrollYProgress }: { i: number; section: (typeof sec
               alt={`Screenshot of ${section.name} page`}
               fill
               className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               priority={i === 0}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -65,7 +62,21 @@ const Card = ({ i, section, scrollYProgress }: { i: number; section: (typeof sec
   );
 };
 
-export default function TeknoverseAnimation() {
+interface TeknoverseAnimationProps {
+    sections: Section[];
+    ctaHeading: string;
+    ctaParagraph: string;
+    ctaButtonText: string;
+    ctaButtonLink: string;
+}
+
+export default function TeknoverseAnimation({ 
+    sections = [],
+    ctaHeading,
+    ctaParagraph,
+    ctaButtonText,
+    ctaButtonLink,
+}: TeknoverseAnimationProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: scrollRef,
@@ -80,19 +91,21 @@ export default function TeknoverseAnimation() {
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,_hsl(var(--primary)/0.03),_transparent_40%),radial-gradient(circle_at_bottom_right,_hsl(var(--accent)/0.03),_transparent_40%)]" />
 
           {sections.map((section, i) => (
-            <Card key={section.id} i={i} section={section} scrollYProgress={scrollYProgress} />
+            <Card key={section.id} i={i} section={section} total={sections.length} scrollYProgress={scrollYProgress} />
           ))}
         </div>
       </div>
 
       <div className="relative z-10 flex h-screen w-full flex-col items-center justify-center bg-background px-4 text-center">
-          <h2 className="mb-6 text-4xl font-bold md:text-6xl">Ready to Explore Teknoverse?</h2>
+          <h2 className="mb-6 text-4xl font-bold md:text-6xl">{ctaHeading}</h2>
           <p className="mb-8 max-w-2xl text-lg text-muted-foreground">
-            You've seen the glimpses, now experience the full vision. Click below to enter a new digital dimension.
+            {ctaParagraph}
           </p>
-          <Button size="lg" className="button-glow-accent bg-accent text-accent-foreground text-lg font-bold">
-              Visit Teknoverse Now <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+          <Link href={ctaButtonLink} target="_blank" rel="noopener noreferrer">
+            <Button size="lg" className="button-glow-accent bg-accent text-accent-foreground text-lg font-bold">
+                {ctaButtonText} <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
           <div className="mt-6 font-mono text-lg text-glow-accent">
               <Typewriter text="https://teknoverse.dev" />
           </div>

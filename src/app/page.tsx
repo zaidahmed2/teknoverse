@@ -1,9 +1,18 @@
 import TeknoverseAnimation from '@/components/teknoverse-animation';
+import { getContent } from '@/services/contentService';
 
-export default function Home() {
+export default async function Home() {
+  const content = await getContent();
+
   return (
     <main>
-      <TeknoverseAnimation />
+      <TeknoverseAnimation
+        sections={content.sections}
+        ctaHeading={content.ctaHeading}
+        ctaParagraph={content.ctaParagraph}
+        ctaButtonText={content.ctaButtonText}
+        ctaButtonLink={content.ctaButtonLink}
+      />
     </main>
   );
 }
