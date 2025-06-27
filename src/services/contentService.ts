@@ -43,13 +43,23 @@ export async function getContent(): Promise<ContentData> {
   try {
     const docSnap = await getDoc(contentDocRef);
     if (docSnap.exists()) {
-      return contentSchema.parse(docSnap.data());
+      // Using safeParse for robustness against malformed data
+      const result = contentSchema.safeParse(docSnap.data());
+      if (result.success) {
+        return result.data;
+      }
+      // Log error if data is invalid and fall back to default
+      console.error('Invalid content structure in Firestore:', result.error);
+      return defaultContent;
     } else {
-      await setDoc(contentDocRef, defaultContent);
+      // The document doesn't exist. Instead of trying to create it here
+      // (which requires write permissions), we'll just return the default content.
+      // The document will be created when the user saves from the /upload page.
       return defaultContent;
     }
   } catch (error) {
     console.error("Error getting document:", error);
+    // This will catch permission errors on read, and other network issues.
     return defaultContent;
   }
 }
@@ -63,6 +73,10 @@ export async function updateContent(data: ContentData) {
     console.error("Error updating document:", error);
     if (error instanceof z.ZodError) {
         return { success: false, message: 'Validation failed', errors: error.errors };
+    }
+    // Try to provide a more helpful message for permission errors
+    if (error instanceof Error && error.message.toLowerCase().includes('permission')) {
+      return { success: false, message: 'Permission denied. Please check your Firestore security rules to allow writes.' };
     }
     return { success: false, message: 'Failed to update content.' };
   }
