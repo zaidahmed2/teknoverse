@@ -8,18 +8,18 @@ import Typewriter from '@/components/typewriter';
 import { ArrowRight } from 'lucide-react';
 
 const sections = [
-  { id: 1, name: 'Home', hint: 'abstract digital' },
-  { id: 2, name: 'About', hint: 'team collaboration' },
-  { id: 3, name: 'Products', hint: 'futuristic product' },
-  { id: 4, name: 'Blog', hint: 'hologram article' },
-  { id: 5, name: 'Contact', hint: 'communication network' },
+  { id: 1, name: 'Home', imageUrl: 'https://i.ibb.co/9gPscgC/Home.png' },
+  { id: 2, name: 'About', imageUrl: 'https://i.ibb.co/X22N3yY/About.png' },
+  { id: 3, name: 'Products', imageUrl: 'https://i.ibb.co/4Z5gYj5/Product.png' },
+  { id: 4, name: 'Blog', imageUrl: 'https://i.ibb.co/b3sS9xR/Blog.png' },
+  { id: 5, name: 'Contact', imageUrl: 'https://i.ibb.co/6y1820W/Contact.png' },
 ];
 
 const Card = ({ i, section, scrollYProgress }: { i: number; section: (typeof sections)[0]; scrollYProgress: MotionValue<number> }) => {
   const total = sections.length;
-  const inputRange = [ (i - 0.75) / (total - 1), i / (total - 1), (i + 0.75) / (total - 1) ];
+  const inputRange = [ (i - 1) / total, i / total, (i + 1) / total ];
   
-  const scale = useTransform(scrollYProgress, inputRange, [0.8, 1, 0.8]);
+  const scale = useTransform(scrollYProgress, inputRange, [1, 1.05, 1]);
   const x = useTransform(scrollYProgress, inputRange, ["25%", "0%", "-25%"]);
   const filter = useTransform(scrollYProgress, inputRange, ["blur(16px)", "blur(0px)", "blur(16px)"]);
   const opacity = useTransform(scrollYProgress, inputRange, [0.3, 1, 0.3]);
@@ -40,11 +40,11 @@ const Card = ({ i, section, scrollYProgress }: { i: number; section: (typeof sec
       <div className="relative h-full w-full rounded-2xl border border-border/20 bg-card/60 p-4 soft-shadow backdrop-blur-lg">
         <div className="relative h-full w-full overflow-hidden rounded-lg">
           <Image
-              src={`https://placehold.co/1024x768.png`}
+              src={section.imageUrl}
               alt={`Screenshot of ${section.name} page`}
               fill
-              data-ai-hint={section.hint}
               className="object-cover"
+              priority={i === 0}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <h2 className="absolute bottom-6 left-6 text-4xl font-bold text-white">
