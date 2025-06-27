@@ -8,11 +8,11 @@ import Typewriter from '@/components/typewriter';
 import { ArrowRight } from 'lucide-react';
 
 const sections = [
-  { id: 1, name: 'Home', imageUrl: 'https://i.ibb.co/9gPscgC/Home.png' },
-  { id: 2, name: 'About', imageUrl: 'https://i.ibb.co/X22N3yY/About.png' },
-  { id: 3, name: 'Products', imageUrl: 'https://i.ibb.co/4Z5gYj5/Product.png' },
-  { id: 4, name: 'Blog', imageUrl: 'https://i.ibb.co/b3sS9xR/Blog.png' },
-  { id: 5, name: 'Contact', imageUrl: 'https://i.ibb.co/6y1820W/Contact.png' },
+  { id: 1, name: 'Home', imageUrl: 'https://i.ibb.co/Gvh937bv/img1.png' },
+  { id: 2, name: 'About', imageUrl: 'https://i.ibb.co/M5RgYHRy/img2.png' },
+  { id: 3, name: 'Products', imageUrl: 'https://i.ibb.co/NdNqcnFW/img3.png' },
+  { id: 4, name: 'Blog', imageUrl: 'https://i.ibb.co/3bDTSRs/img4.png' },
+  { id: 5, name: 'Contact', imageUrl: 'https://i.ibb.co/MytkQCwg/img5.png' },
 ];
 
 const Card = ({ i, section, scrollYProgress }: { i: number; section: (typeof sections)[0]; scrollYProgress: MotionValue<number> }) => {
