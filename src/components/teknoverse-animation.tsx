@@ -19,9 +19,18 @@ const Card = ({ i, section, scrollYProgress }: { i: number; section: (typeof sec
   const total = sections.length;
   const inputRange = [ (i - 1) / total, i / total, (i + 1) / total ];
   
+  // This new range ensures the card is perfectly sharp for a wider part of its transition.
+  const sharpFocusInputRange = [
+    (i - 1) / total,
+    (i - 0.4) / total,
+    (i + 0.4) / total,
+    (i + 1) / total
+  ];
+
   const scale = useTransform(scrollYProgress, inputRange, [1, 1.05, 1]);
   const x = useTransform(scrollYProgress, inputRange, ["25%", "0%", "-25%"]);
-  const filter = useTransform(scrollYProgress, inputRange, ["blur(16px)", "blur(0px)", "blur(16px)"]);
+  // Use the new input range to keep the blur at 0px when the card is in the center.
+  const filter = useTransform(scrollYProgress, sharpFocusInputRange, ["blur(16px)", "blur(0px)", "blur(0px)", "blur(16px)"]);
   const opacity = useTransform(scrollYProgress, inputRange, [0.3, 1, 0.3]);
   const zIndex = useTransform(opacity, (val) => Math.round(val * 20));
 
