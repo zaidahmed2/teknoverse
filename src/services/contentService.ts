@@ -3,6 +3,7 @@
 import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { z } from 'zod';
+import { cache } from 'react';
 
 const sectionSchema = z.object({
   id: z.string(),
@@ -39,7 +40,7 @@ const defaultContent: ContentData = {
 
 const contentDocRef = doc(db, 'content', 'homepage');
 
-export async function getContent(): Promise<ContentData> {
+export const getContent = cache(async (): Promise<ContentData> => {
   try {
     const docSnap = await getDoc(contentDocRef);
     if (docSnap.exists()) {
@@ -59,10 +60,20 @@ export async function getContent(): Promise<ContentData> {
     }
   } catch (error) {
     console.error("Error getting document:", error);
+    // Add a more helpful message about security rules
+    if (error instanceof Error && error.message.toLowerCase().includes('permission')) {
+        console.error("----------------------------------------------------------------------");
+        console.error(">>> Firebase Permission Error <<<");
+        console.error("Your Firestore security rules are preventing the app from reading data.");
+        console.error("To fix this, go to your Firebase project > Firestore > Rules and allow reads.");
+        console.error("For example, to allow public reads on your content, use:");
+        console.error("match /content/homepage { allow read: if true; }");
+        console.error("----------------------------------------------------------------------");
+    }
     // This will catch permission errors on read, and other network issues.
     return defaultContent;
   }
-}
+});
 
 export async function updateContent(data: ContentData) {
   try {
