@@ -17,7 +17,7 @@ const sections = [
 
 const Card = ({ i, section, scrollYProgress }: { i: number; section: (typeof sections)[0]; scrollYProgress: MotionValue<number> }) => {
   const total = sections.length;
-  const inputRange = [ (i - 1.5) / (total - 1), i / (total - 1), (i + 1.5) / (total - 1) ];
+  const inputRange = [ (i - 0.75) / (total - 1), i / (total - 1), (i + 0.75) / (total - 1) ];
   
   const scale = useTransform(scrollYProgress, inputRange, [0.8, 1, 0.8]);
   const x = useTransform(scrollYProgress, inputRange, ["25%", "0%", "-25%"]);
