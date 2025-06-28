@@ -18,15 +18,15 @@ const Card = ({ i, section, total, scrollYProgress }: { i: number; section: Sect
   const inputRange = [ (i - 1) / total, i / total, (i + 1) / total ];
   
   const sharpFocusInputRange = [
-    (i - 1) / total,
-    (i - 0.4) / total,
-    (i + 0.4) / total,
-    (i + 1) / total
+    (i - 0.7) / total, 
+    (i - 0.5) / total, 
+    (i + 0.5) / total, 
+    (i + 0.7) / total
   ];
 
   const scale = useTransform(scrollYProgress, inputRange, [1, 1.05, 1]);
   const x = useTransform(scrollYProgress, inputRange, ["25%", "0%", "-25%"]);
-  const filter = useTransform(scrollYProgress, sharpFocusInputRange, ["blur(16px)", "blur(0px)", "blur(0px)", "blur(16px)"]);
+  const filter = useTransform(scrollYProgress, sharpFocusInputRange, ["blur(8px)", "blur(0px)", "blur(0px)", "blur(8px)"]);
   const opacity = useTransform(scrollYProgress, inputRange, [0.3, 1, 0.3]);
   const zIndex = useTransform(opacity, (val) => Math.round(val * 20));
 
@@ -40,7 +40,7 @@ const Card = ({ i, section, total, scrollYProgress }: { i: number; section: Sect
         opacity,
         zIndex,
       }}
-      className="flex h-[70vh] w-[90vw] max-w-5xl items-center justify-center"
+      className="flex h-[70vh] w-[90vw] max-w-6xl items-center justify-center"
     >
       <div className="relative h-full w-full rounded-2xl border border-border/20 bg-card/60 p-4 soft-shadow backdrop-blur-lg">
         <div className="relative h-full w-full overflow-hidden rounded-lg">
@@ -51,7 +51,7 @@ const Card = ({ i, section, total, scrollYProgress }: { i: number; section: Sect
               className="object-cover"
               sizes="100vw"
               quality={100}
-              priority={i === 0}
+              priority={i < 2}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <h2 className="absolute bottom-6 left-6 text-4xl font-bold text-white">
@@ -87,7 +87,7 @@ export default function TeknoverseAnimation({
   return (
     <>
       <div ref={scrollRef} style={{ height: `${sections.length * 100}vh` }}>
-        <div className="sticky top-16 flex h-[calc(100vh-4rem)] items-center justify-center overflow-hidden">
+        <div className="sticky top-32 flex h-[calc(100vh-8rem)] items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0 bg-background" />
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,_hsl(var(--primary)/0.03),_transparent_40%),radial-gradient(circle_at_bottom_right,_hsl(var(--accent)/0.03),_transparent_40%)]" />
 
