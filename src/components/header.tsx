@@ -16,7 +16,7 @@ export default function Header({ logoUrl }: HeaderProps) {
               width={120}
               height={40}
               data-ai-hint="logo tech"
-              className="h-8 w-auto"
+              className="h-7 w-auto"
               priority
             />
         </Link>

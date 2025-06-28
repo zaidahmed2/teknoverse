@@ -49,7 +49,8 @@ const Card = ({ i, section, total, scrollYProgress }: { i: number; section: Sect
               alt={`Screenshot of ${section.name} page`}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="100vw"
+              quality={100}
               priority={i === 0}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -86,7 +87,7 @@ export default function TeknoverseAnimation({
   return (
     <>
       <div ref={scrollRef} style={{ height: `${sections.length * 100}vh` }}>
-        <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
+        <div className="sticky top-16 flex h-[calc(100vh-4rem)] items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0 bg-background" />
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,_hsl(var(--primary)/0.03),_transparent_40%),radial-gradient(circle_at_bottom_right,_hsl(var(--accent)/0.03),_transparent_40%)]" />
 
