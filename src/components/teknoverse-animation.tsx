@@ -103,7 +103,7 @@ export default function TeknoverseAnimation({
             {ctaParagraph}
           </p>
           <Link href={ctaButtonLink} target="_blank" rel="noopener noreferrer">
-            <Button size="lg" className="button-glow-accent bg-accent text-accent-foreground text-lg font-bold">
+            <Button size="lg" className="bg-accent text-accent-foreground text-lg font-bold button-glow-accent hover:bg-black hover:text-white hover:shadow-none transition-all duration-300">
                 {ctaButtonText} <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
