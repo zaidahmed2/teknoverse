@@ -39,7 +39,7 @@ const Card = ({ i, section, total, scrollYProgress }: { i: number; section: Sect
         opacity,
         zIndex,
       }}
-      className="flex h-[70vh] w-[95vw] max-w-6xl items-center justify-center"
+      className="flex h-[80vh] w-[95vw] max-w-6xl items-center justify-center"
     >
       <div className="relative h-full w-full rounded-2xl border border-border/20 bg-card/60 p-4 soft-shadow backdrop-blur-lg">
         <div className="relative h-full w-full overflow-hidden rounded-lg">
