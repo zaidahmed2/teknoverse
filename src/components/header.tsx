@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Settings } from 'lucide-react';
 
 interface HeaderProps {
   logoUrl: string;
@@ -16,12 +15,9 @@ export default function Header({ logoUrl }: HeaderProps) {
               width={120}
               height={40}
               data-ai-hint="logo tech"
-              className="h-7 w-auto"
+              className="h-6 w-auto"
               priority
             />
-        </Link>
-        <Link href="/upload" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Manage Content">
-            <Settings className="h-6 w-6" />
         </Link>
     </header>
   );

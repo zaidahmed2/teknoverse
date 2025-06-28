@@ -40,7 +40,7 @@ const Card = ({ i, section, total, scrollYProgress }: { i: number; section: Sect
         opacity,
         zIndex,
       }}
-      className="flex h-[70vh] w-[90vw] max-w-6xl items-center justify-center"
+      className="flex h-[70vh] w-[95vw] max-w-6xl items-center justify-center"
     >
       <div className="relative h-full w-full rounded-2xl border border-border/20 bg-card/60 p-4 soft-shadow backdrop-blur-lg">
         <div className="relative h-full w-full overflow-hidden rounded-lg">
@@ -87,7 +87,7 @@ export default function TeknoverseAnimation({
   return (
     <>
       <div ref={scrollRef} style={{ height: `${sections.length * 100}vh` }}>
-        <div className="sticky top-32 flex h-[calc(100vh-8rem)] items-center justify-center overflow-hidden">
+        <div className="sticky top-28 flex h-[calc(100vh-7rem)] items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0 bg-background" />
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,_hsl(var(--primary)/0.03),_transparent_40%),radial-gradient(circle_at_bottom_right,_hsl(var(--accent)/0.03),_transparent_40%)]" />
 
@@ -110,6 +110,9 @@ export default function TeknoverseAnimation({
           <div className="mt-6 font-mono text-lg text-glow-accent">
               <Typewriter text="https://teknoverse.dev" />
           </div>
+          <p className="absolute bottom-8 text-sm text-muted-foreground">
+            Designed by <a href="https://teknoverse.com.au/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">Teknoverse</a>
+          </p>
       </div>
     </>
   );
