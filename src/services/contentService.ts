@@ -8,11 +8,11 @@ import { cache } from 'react';
 const sectionSchema = z.object({
   id: z.string(),
   name: z.string(),
-  imageUrl: z.string().url(),
+  imageUrl: z.string(),
 });
 
 const contentSchema = z.object({
-  logoUrl: z.string().url(),
+  logoUrl: z.string(),
   ctaHeading: z.string(),
   ctaParagraph: z.string(),
   ctaButtonText: z.string(),

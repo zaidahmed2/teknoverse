@@ -17,11 +17,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 const sectionSchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Name is required'),
-  imageUrl: z.string().url('Must be a valid URL'),
+  imageUrl: z.string().min(1, 'Image URL cannot be empty'),
 });
 
 const contentFormSchema = z.object({
-  logoUrl: z.string().url('Must be a valid URL'),
+  logoUrl: z.string().min(1, 'Logo URL cannot be empty'),
   ctaHeading: z.string().min(1, 'Heading is required'),
   ctaParagraph: z.string().min(1, 'Paragraph is required'),
   ctaButtonText: z.string().min(1, 'Button text is required'),
