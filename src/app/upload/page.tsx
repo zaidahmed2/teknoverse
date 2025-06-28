@@ -16,17 +16,17 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const sectionSchema = z.object({
   id: z.string(),
-  name: z.string().min(1, 'Name is required'),
-  imageUrl: z.string().min(1, 'Image URL cannot be empty'),
+  name: z.string(),
+  imageUrl: z.string(),
 });
 
 const contentFormSchema = z.object({
-  logoUrl: z.string().min(1, 'Logo URL cannot be empty'),
-  ctaHeading: z.string().min(1, 'Heading is required'),
-  ctaParagraph: z.string().min(1, 'Paragraph is required'),
-  ctaButtonText: z.string().min(1, 'Button text is required'),
-  ctaButtonLink: z.string().url('Must be a valid URL'),
-  sections: z.array(sectionSchema).min(1, 'At least one section is required'),
+  logoUrl: z.string(),
+  ctaHeading: z.string(),
+  ctaParagraph: z.string(),
+  ctaButtonText: z.string(),
+  ctaButtonLink: z.string(),
+  sections: z.array(sectionSchema),
 });
 
 export default function UploadPage() {
@@ -107,28 +107,23 @@ export default function UploadPage() {
                 <div>
                     <Label htmlFor="logoUrl">Logo URL</Label>
                     <Input id="logoUrl" {...form.register('logoUrl')} />
-                    {form.formState.errors.logoUrl && <p className="text-destructive text-sm mt-1">{form.formState.errors.logoUrl.message}</p>}
                 </div>
                 <Separator />
                 <div>
                     <Label htmlFor="ctaHeading">CTA Heading</Label>
                     <Input id="ctaHeading" {...form.register('ctaHeading')} />
-                    {form.formState.errors.ctaHeading && <p className="text-destructive text-sm mt-1">{form.formState.errors.ctaHeading.message}</p>}
                 </div>
                  <div>
                     <Label htmlFor="ctaParagraph">CTA Paragraph</Label>
                     <Input id="ctaParagraph" {...form.register('ctaParagraph')} />
-                    {form.formState.errors.ctaParagraph && <p className="text-destructive text-sm mt-1">{form.formState.errors.ctaParagraph.message}</p>}
                 </div>
                 <div>
                     <Label htmlFor="ctaButtonText">CTA Button Text</Label>
                     <Input id="ctaButtonText" {...form.register('ctaButtonText')} />
-                    {form.formState.errors.ctaButtonText && <p className="text-destructive text-sm mt-1">{form.formState.errors.ctaButtonText.message}</p>}
                 </div>
                  <div>
                     <Label htmlFor="ctaButtonLink">CTA Button Link</Label>
                     <Input id="ctaButtonLink" {...form.register('ctaButtonLink')} />
-                    {form.formState.errors.ctaButtonLink && <p className="text-destructive text-sm mt-1">{form.formState.errors.ctaButtonLink.message}</p>}
                 </div>
             </CardContent>
         </Card>
@@ -146,12 +141,10 @@ export default function UploadPage() {
                             <div>
                                 <Label htmlFor={`sections.${index}.name`}>Section Name</Label>
                                 <Input id={`sections.${index}.name`} {...form.register(`sections.${index}.name`)} />
-                                {form.formState.errors.sections?.[index]?.name && <p className="text-destructive text-sm mt-1">{form.formState.errors.sections[index].name.message}</p>}
                             </div>
                             <div>
                                 <Label htmlFor={`sections.${index}.imageUrl`}>Image URL</Label>
                                 <Input id={`sections.${index}.imageUrl`} {...form.register(`sections.${index}.imageUrl`)} />
-                                {form.formState.errors.sections?.[index]?.imageUrl && <p className="text-destructive text-sm mt-1">{form.formState.errors.sections[index].imageUrl.message}</p>}
                             </div>
                         </div>
                         <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
@@ -160,7 +153,6 @@ export default function UploadPage() {
                         </Button>
                     </div>
                 ))}
-                {form.formState.errors.sections?.root && <p className="text-destructive text-sm mt-1">{form.formState.errors.sections.root.message}</p>}
                  <Button type="button" variant="outline" onClick={() => append({ id: `${Date.now()}`, name: '', imageUrl: '' })}>
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Add Section

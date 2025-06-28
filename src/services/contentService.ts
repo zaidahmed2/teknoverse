@@ -16,7 +16,7 @@ const contentSchema = z.object({
   ctaHeading: z.string(),
   ctaParagraph: z.string(),
   ctaButtonText: z.string(),
-  ctaButtonLink: z.string().url(),
+  ctaButtonLink: z.string(),
   sections: z.array(sectionSchema),
 });
 

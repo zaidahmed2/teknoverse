@@ -5,7 +5,6 @@ import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
-import Typewriter from '@/components/typewriter';
 import { ArrowRight } from 'lucide-react';
 
 type Section = { 
@@ -87,7 +86,7 @@ export default function TeknoverseAnimation({
   return (
     <>
       <div ref={scrollRef} style={{ height: `${sections.length * 100}vh` }}>
-        <div className="sticky top-28 flex h-[calc(100vh-7rem)] items-center justify-center overflow-hidden">
+        <div className="sticky top-24 flex h-[calc(100vh-6rem)] items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0 bg-background" />
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,_hsl(var(--primary)/0.03),_transparent_40%),radial-gradient(circle_at_bottom_right,_hsl(var(--accent)/0.03),_transparent_40%)]" />
 
@@ -107,11 +106,8 @@ export default function TeknoverseAnimation({
                 {ctaButtonText} <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
-          <div className="mt-6 font-mono text-lg text-glow-accent">
-              <Typewriter text="https://teknoverse.dev" />
-          </div>
           <p className="absolute bottom-8 text-sm text-muted-foreground">
-            Designed by <a href="https://teknoverse.com.au/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">Teknoverse</a>
+            © {new Date().getFullYear()} Designed by <a href="https://teknoverse.com.au/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">Teknoverse</a>
           </p>
       </div>
     </>
