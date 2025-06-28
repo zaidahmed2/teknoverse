@@ -41,7 +41,7 @@ const Card = ({ i, section, total, scrollYProgress, onClick }: { i: number; sect
         opacity,
         zIndex,
       }}
-      className="flex h-[90vh] w-[95vw] max-w-7xl items-center justify-center cursor-pointer"
+      className="flex h-[80vh] w-[80vw] max-w-7xl items-center justify-center cursor-pointer"
       onClick={onClick}
     >
       <div className="relative h-full w-full rounded-2xl border border-border/20 bg-card/60 p-4 soft-shadow backdrop-blur-lg">
@@ -50,12 +50,12 @@ const Card = ({ i, section, total, scrollYProgress, onClick }: { i: number; sect
               src={section.imageUrl}
               alt={`Screenshot of ${section.name} page`}
               fill
-              className="object-cover"
+              className="object-contain"
               sizes="100vw"
               quality={100}
               priority={i < 2}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
           <h2 className="absolute bottom-6 left-6 text-4xl font-bold text-white">
             {section.name}
           </h2>
@@ -129,8 +129,8 @@ export default function TeknoverseAnimation({
                 <Image
                     src={selectedImage}
                     alt="Full screen view"
-                    layout="fill"
-                    objectFit="contain"
+                    fill
+                    className="object-contain"
                     quality={100}
                 />
               </div>
