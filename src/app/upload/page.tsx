@@ -31,21 +31,17 @@ const contentFormSchema = z.object({
 
 export default function UploadPage() {
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<ContentData>({
     resolver: zodResolver(contentFormSchema),
     defaultValues: async () => {
-        setIsLoading(true);
-        try {
-            const content = await getContent();
-            return content;
-        } finally {
-            setIsLoading(false);
-        }
+      // react-hook-form will handle the loading state via formState.isLoading
+      return getContent();
     },
   });
+  
+  const { isLoading } = form.formState;
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
