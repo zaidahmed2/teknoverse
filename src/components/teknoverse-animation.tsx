@@ -1,11 +1,13 @@
+
 "use client";
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, X } from 'lucide-react';
+import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
 
 type Section = { 
   id: string | number; 
@@ -13,7 +15,7 @@ type Section = {
   imageUrl: string 
 };
 
-const Card = ({ i, section, total, scrollYProgress }: { i: number; section: Section; total: number; scrollYProgress: MotionValue<number> }) => {
+const Card = ({ i, section, total, scrollYProgress, onClick }: { i: number; section: Section; total: number; scrollYProgress: MotionValue<number>; onClick: () => void }) => {
   const inputRange = [ (i - 1) / total, i / total, (i + 1) / total ];
   
   const sharpFocusInputRange = [
@@ -39,7 +41,8 @@ const Card = ({ i, section, total, scrollYProgress }: { i: number; section: Sect
         opacity,
         zIndex,
       }}
-      className="flex h-[80vh] w-[95vw] max-w-7xl items-center justify-center"
+      className="flex h-[90vh] w-[95vw] max-w-7xl items-center justify-center cursor-pointer"
+      onClick={onClick}
     >
       <div className="relative h-full w-full rounded-2xl border border-border/20 bg-card/60 p-4 soft-shadow backdrop-blur-lg">
         <div className="relative h-full w-full overflow-hidden rounded-lg">
@@ -77,21 +80,26 @@ export default function TeknoverseAnimation({
     ctaButtonText,
     ctaButtonLink,
 }: TeknoverseAnimationProps) {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: scrollRef,
     offset: ['start start', 'end end'],
   });
 
+  const handleImageClick = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+  };
+
   return (
     <>
       <div ref={scrollRef} style={{ height: `${sections.length * 100}vh` }}>
-        <div className="sticky top-24 flex h-[calc(100vh-6rem)] items-center justify-center overflow-hidden">
+        <div className="sticky top-16 flex h-[calc(100vh-4rem)] items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0 bg-background" />
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,_hsl(var(--primary)/0.03),_transparent_40%),radial-gradient(circle_at_bottom_right,_hsl(var(--accent)/0.03),_transparent_40%)]" />
 
           {sections.map((section, i) => (
-            <Card key={section.id} i={i} section={section} total={sections.length} scrollYProgress={scrollYProgress} />
+            <Card key={section.id} i={i} section={section} total={sections.length} scrollYProgress={scrollYProgress} onClick={() => handleImageClick(section.imageUrl)} />
           ))}
         </div>
       </div>
@@ -110,6 +118,25 @@ export default function TeknoverseAnimation({
             © {new Date().getFullYear()} Designed by <a href="https://teknoverse.com.au/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">Teknoverse</a>
           </p>
       </div>
+
+      <Dialog open={!!selectedImage} onOpenChange={(isOpen) => !isOpen && setSelectedImage(null)}>
+        <DialogContent className="max-w-none w-screen h-screen p-0 bg-black/80 backdrop-blur-sm border-0 flex items-center justify-center">
+            <DialogClose className="absolute right-4 top-4 z-10 text-white bg-black/50 hover:bg-black/75 p-2 rounded-full transition-colors">
+                <X className="h-6 w-6" />
+            </DialogClose>
+            {selectedImage && (
+              <div className="relative w-[95vw] h-[95vh]">
+                <Image
+                    src={selectedImage}
+                    alt="Full screen view"
+                    layout="fill"
+                    objectFit="contain"
+                    quality={100}
+                />
+              </div>
+            )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
