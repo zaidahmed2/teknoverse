@@ -26,7 +26,7 @@ export default async function RootLayout({
   const content = await getContent();
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={cn('font-body antialiased', poppins.variable)}>
         <Header logoUrl={content.logoUrl} />
         {children}
