@@ -15,7 +15,7 @@ export default async function Home() {
         <TeknoverseAnimation sections={content.sections || []} />
         {content.mainShowcaseDemoUrl && (
             <div className="text-center pt-8 bg-background">
-                <Button asChild size="lg">
+                <Button asChild size="lg" variant="outline" className="bg-transparent border-foreground/50 hover:bg-foreground hover:text-background transition-all duration-300 ease-in-out hover:scale-105 hover:border-foreground">
                     <Link href={content.mainShowcaseDemoUrl} target="_blank" rel="noopener noreferrer">
                         View Demo <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
@@ -30,7 +30,7 @@ export default async function Home() {
           <TeknoverseAnimation sections={demo.sections || []} />
           {demo.demoUrl && (
             <div className="text-center pt-8 bg-background">
-                <Button asChild size="lg">
+                <Button asChild size="lg" variant="outline" className="bg-transparent border-foreground/50 hover:bg-foreground hover:text-background transition-all duration-300 ease-in-out hover:scale-105 hover:border-foreground">
                     <Link href={demo.demoUrl} target="_blank" rel="noopener noreferrer">
                         View Demo <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
