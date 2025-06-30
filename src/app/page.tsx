@@ -15,7 +15,7 @@ export default async function Home() {
       
       {content.demos?.map((demo) => (
         <div key={demo.id} className="relative z-10">
-          {demo.title && <h2 className="text-3xl md:text-4xl font-bold text-center mt-20 mb-[-5rem] relative z-10">{demo.title}</h2>}
+          {demo.title && <h2 className="text-3xl md:text-4xl font-bold text-center mt-32 mb-[-5rem] relative z-10">{demo.title}</h2>}
           <TeknoverseAnimation sections={demo.sections || []} />
           {demo.demoUrl && (
             <div className="text-center py-12 bg-background">
