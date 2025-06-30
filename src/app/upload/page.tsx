@@ -13,20 +13,30 @@ import { Trash2, PlusCircle } from 'lucide-react';
 import { getContent, updateContent, type ContentData } from '@/services/contentService';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Textarea } from '@/components/ui/textarea';
 
 const sectionSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  imageUrl: z.string(),
+  id: z.string().optional(),
+  name: z.string().optional(),
+  imageUrl: z.string().optional(),
+});
+
+const demoSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  imageUrl: z.string().optional(),
+  demoUrl: z.string().optional(),
 });
 
 const contentFormSchema = z.object({
-  logoUrl: z.string(),
-  ctaHeading: z.string(),
-  ctaParagraph: z.string(),
-  ctaButtonText: z.string(),
-  ctaButtonLink: z.string(),
-  sections: z.array(sectionSchema),
+  logoUrl: z.string().optional(),
+  ctaHeading: z.string().optional(),
+  ctaParagraph: z.string().optional(),
+  ctaButtonText: z.string().optional(),
+  ctaButtonLink: z.string().optional(),
+  sections: z.array(sectionSchema).optional(),
+  demos: z.array(demoSchema).optional(),
 });
 
 export default function UploadPage() {
@@ -36,16 +46,21 @@ export default function UploadPage() {
   const form = useForm<ContentData>({
     resolver: zodResolver(contentFormSchema),
     defaultValues: async () => {
-      // react-hook-form will handle the loading state via formState.isLoading
       return getContent();
     },
   });
   
   const { isLoading } = form.formState;
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields: sectionFields, append: appendSection, remove: removeSection } = useFieldArray({
     control: form.control,
     name: 'sections',
+    keyName: 'key',
+  });
+
+  const { fields: demoFields, append: appendDemo, remove: removeDemo } = useFieldArray({
+    control: form.control,
+    name: 'demos',
     keyName: 'key',
   });
 
@@ -130,11 +145,11 @@ export default function UploadPage() {
         
         <Card>
             <CardHeader>
-                <CardTitle>Showcase Sections</CardTitle>
+                <CardTitle>Showcase Sections (Demo 1)</CardTitle>
                 <CardDescription>Manage the pages shown in the scroll animation.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                {fields.map((field, index) => (
+                {sectionFields.map((field, index) => (
                     <div key={field.key} className="flex items-start gap-4 p-4 border rounded-lg">
                         <div className="font-bold text-lg text-muted-foreground">{index + 1}</div>
                         <div className="flex-grow space-y-4">
@@ -147,17 +162,57 @@ export default function UploadPage() {
                                 <Input id={`sections.${index}.imageUrl`} {...form.register(`sections.${index}.imageUrl`)} />
                             </div>
                         </div>
-                        <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                        <Button type="button" variant="ghost" size="icon" onClick={() => removeSection(index)}>
                             <Trash2 className="h-4 w-4" />
                             <span className="sr-only">Remove Section</span>
                         </Button>
                     </div>
                 ))}
-                 <Button type="button" variant="outline" onClick={() => append({ id: `${Date.now()}`, name: '', imageUrl: '' })}>
+                 <Button type="button" variant="outline" onClick={() => appendSection({ id: `${Date.now()}`, name: '', imageUrl: '' })}>
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Add Section
                 </Button>
             </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Demos</CardTitle>
+            <CardDescription>Manage the interactive demos displayed on the homepage.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {demoFields.map((field, index) => (
+              <div key={field.key} className="flex items-start gap-4 p-4 border rounded-lg">
+                <div className="font-bold text-lg text-muted-foreground">{index + 1}</div>
+                <div className="flex-grow space-y-4">
+                  <div>
+                    <Label htmlFor={`demos.${index}.title`}>Demo Title</Label>
+                    <Input id={`demos.${index}.title`} {...form.register(`demos.${index}.title`)} />
+                  </div>
+                  <div>
+                    <Label htmlFor={`demos.${index}.description`}>Description</Label>
+                    <Textarea id={`demos.${index}.description`} {...form.register(`demos.${index}.description`)} />
+                  </div>
+                  <div>
+                    <Label htmlFor={`demos.${index}.imageUrl`}>Image URL</Label>
+                    <Input id={`demos.${index}.imageUrl`} {...form.register(`demos.${index}.imageUrl`)} />
+                  </div>
+                  <div>
+                    <Label htmlFor={`demos.${index}.demoUrl`}>Demo URL</Label>
+                    <Input id={`demos.${index}.demoUrl`} {...form.register(`demos.${index}.demoUrl`)} />
+                  </div>
+                </div>
+                <Button type="button" variant="ghost" size="icon" onClick={() => removeDemo(index)}>
+                  <Trash2 className="h-4 w-4" />
+                  <span className="sr-only">Remove Demo</span>
+                </Button>
+              </div>
+            ))}
+            <Button type="button" variant="outline" onClick={() => appendDemo({ id: `${Date.now()}`, title: '', description: '', imageUrl: '', demoUrl: '' })}>
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add New Demo
+            </Button>
+          </CardContent>
         </Card>
 
         <Button type="submit" size="lg" disabled={isSubmitting}>

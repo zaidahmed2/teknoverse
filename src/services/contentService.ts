@@ -6,21 +6,31 @@ import { z } from 'zod';
 import { cache } from 'react';
 
 const sectionSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  imageUrl: z.string(),
+  id: z.string().optional(),
+  name: z.string().optional(),
+  imageUrl: z.string().optional(),
+});
+
+const demoSchema = z.object({
+    id: z.string().optional(),
+    title: z.string().optional(),
+    description: z.string().optional(),
+    imageUrl: z.string().optional(),
+    demoUrl: z.string().optional(),
 });
 
 const contentSchema = z.object({
-  logoUrl: z.string(),
-  ctaHeading: z.string(),
-  ctaParagraph: z.string(),
-  ctaButtonText: z.string(),
-  ctaButtonLink: z.string(),
-  sections: z.array(sectionSchema),
+  logoUrl: z.string().optional(),
+  ctaHeading: z.string().optional(),
+  ctaParagraph: z.string().optional(),
+  ctaButtonText: z.string().optional(),
+  ctaButtonLink: z.string().optional(),
+  sections: z.array(sectionSchema).optional(),
+  demos: z.array(demoSchema).optional(),
 });
 
 export type ContentData = z.infer<typeof contentSchema>;
+export type Demo = z.infer<typeof demoSchema>;
 
 const defaultContent: ContentData = {
     logoUrl: 'https://placehold.co/120x40.png',
@@ -35,6 +45,7 @@ const defaultContent: ContentData = {
         { id: '4', name: 'Blog', imageUrl: 'https://i.ibb.co/3bDTSRs/img4.png' },
         { id: '5', name: 'Contact', imageUrl: 'https://i.ibb.co/MytkQCwg/img5.png' },
     ],
+    demos: [],
 };
 
 
@@ -44,23 +55,22 @@ export const getContent = cache(async (): Promise<ContentData> => {
   try {
     const docSnap = await getDoc(contentDocRef);
     if (docSnap.exists()) {
-      // Using safeParse for robustness against malformed data
-      const result = contentSchema.safeParse(docSnap.data());
+      const data = docSnap.data();
+      // Ensure sections and demos are present
+      if (!data.sections) data.sections = [];
+      if (!data.demos) data.demos = [];
+      
+      const result = contentSchema.safeParse(data);
       if (result.success) {
         return result.data;
       }
-      // Log error if data is invalid and fall back to default
       console.error('Invalid content structure in Firestore:', result.error);
-      return defaultContent;
+      return { ...defaultContent, ...docSnap.data() };
     } else {
-      // The document doesn't exist. Instead of trying to create it here
-      // (which requires write permissions), we'll just return the default content.
-      // The document will be created when the user saves from the /upload page.
       return defaultContent;
     }
   } catch (error) {
     console.error("Error getting document:", error);
-    // Add a more helpful message about security rules
     if (error instanceof Error && error.message.toLowerCase().includes('permission')) {
         console.error("----------------------------------------------------------------------");
         console.error(">>> Firebase Permission Error <<<");
@@ -70,14 +80,18 @@ export const getContent = cache(async (): Promise<ContentData> => {
         console.error("match /content/homepage { allow read: if true; }");
         console.error("----------------------------------------------------------------------");
     }
-    // This will catch permission errors on read, and other network issues.
     return defaultContent;
   }
 });
 
 export async function updateContent(data: ContentData) {
   try {
-    const validatedData = contentSchema.parse(data);
+    const dataToSave = {
+      ...data,
+      sections: data.sections || [],
+      demos: data.demos || [],
+    };
+    const validatedData = contentSchema.parse(dataToSave);
     await setDoc(contentDocRef, validatedData);
     return { success: true, message: 'Content updated successfully!' };
   } catch (error) {
@@ -85,7 +99,6 @@ export async function updateContent(data: ContentData) {
     if (error instanceof z.ZodError) {
         return { success: false, message: 'Validation failed', errors: error.errors };
     }
-    // Try to provide a more helpful message for permission errors
     if (error instanceof Error && error.message.toLowerCase().includes('permission')) {
       return { success: false, message: 'Permission denied. Please check your Firestore security rules to allow writes.' };
     }
