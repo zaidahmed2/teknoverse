@@ -4,6 +4,7 @@ import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { z } from 'zod';
 import { cache } from 'react';
+import { revalidatePath } from 'next/cache';
 
 const sectionSchema = z.object({
   id: z.string().optional(),
@@ -100,6 +101,9 @@ export async function updateContent(data: ContentData) {
     };
     const validatedData = contentSchema.parse(dataToSave);
     await setDoc(contentDocRef, validatedData);
+    
+    revalidatePath('/');
+
     return { success: true, message: 'Content updated successfully!' };
   } catch (error) {
     console.error("Error updating document:", error);
