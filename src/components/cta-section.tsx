@@ -1,3 +1,6 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -10,6 +13,12 @@ interface CtaSectionProps {
 }
 
 export default function CtaSection({ ctaHeading, ctaParagraph, ctaButtonText, ctaButtonLink }: CtaSectionProps) {
+  const [year, setYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
     <div className="relative z-10 flex h-screen w-full flex-col items-center justify-center bg-background px-4 text-center">
         <h2 className="mb-6 text-4xl font-bold md:text-6xl">{ctaHeading}</h2>
@@ -24,7 +33,7 @@ export default function CtaSection({ ctaHeading, ctaParagraph, ctaButtonText, ct
           </Link>
         )}
         <p className="absolute bottom-8 text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Designed by <a href="https://teknoverse.com.au/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">Teknoverse</a>
+          © {year} Designed by <a href="https://teknoverse.com.au/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">Teknoverse</a>
         </p>
     </div>
   );
