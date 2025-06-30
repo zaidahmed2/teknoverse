@@ -29,6 +29,7 @@ const demoSchema = z.object({
 const contentFormSchema = z.object({
   logoUrl: z.string().optional(),
   mainShowcaseTitle: z.string().optional(),
+  mainShowcaseDemoUrl: z.string().optional(),
   ctaHeading: z.string().optional(),
   ctaParagraph: z.string().optional(),
   ctaButtonText: z.string().optional(),
@@ -188,6 +189,10 @@ export default function UploadPage() {
                 <div>
                     <Label htmlFor="mainShowcaseTitle">Showcase Title</Label>
                     <Input id="mainShowcaseTitle" {...form.register('mainShowcaseTitle')} placeholder="e.g., Our Main Features"/>
+                </div>
+                <div>
+                    <Label htmlFor="mainShowcaseDemoUrl">Demo URL</Label>
+                    <Input id="mainShowcaseDemoUrl" {...form.register('mainShowcaseDemoUrl')} placeholder="https://example.com" />
                 </div>
                 <Separator/>
                 {sectionFields.map((field, index) => (

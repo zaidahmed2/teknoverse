@@ -10,15 +10,26 @@ export default async function Home() {
 
   return (
     <main>
-      {content.mainShowcaseTitle && <h2 className="text-3xl md:text-4xl font-bold text-center mt-32 mb-[-5rem] relative z-10">{content.mainShowcaseTitle}</h2>}
-      <TeknoverseAnimation sections={content.sections || []} />
+      <div className="pb-20">
+        {content.mainShowcaseTitle && <h2 className="text-3xl md:text-4xl font-bold text-center mt-32 mb-[-3rem] relative z-10">{content.mainShowcaseTitle}</h2>}
+        <TeknoverseAnimation sections={content.sections || []} />
+        {content.mainShowcaseDemoUrl && (
+            <div className="text-center pt-8 bg-background">
+                <Button asChild size="lg">
+                    <Link href={content.mainShowcaseDemoUrl} target="_blank" rel="noopener noreferrer">
+                        View Demo <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                </Button>
+            </div>
+        )}
+      </div>
       
       {content.demos?.map((demo) => (
-        <div key={demo.id} className="relative z-10">
-          {demo.title && <h2 className="text-3xl md:text-4xl font-bold text-center mt-32 mb-[-5rem] relative z-10">{demo.title}</h2>}
+        <div key={demo.id} className="relative z-10 pb-20">
+          {demo.title && <h2 className="text-3xl md:text-4xl font-bold text-center mt-32 mb-[-3rem] relative z-10">{demo.title}</h2>}
           <TeknoverseAnimation sections={demo.sections || []} />
           {demo.demoUrl && (
-            <div className="text-center py-12 bg-background">
+            <div className="text-center pt-8 bg-background">
                 <Button asChild size="lg">
                     <Link href={demo.demoUrl} target="_blank" rel="noopener noreferrer">
                         View Demo <ArrowRight className="ml-2 h-5 w-5" />

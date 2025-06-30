@@ -21,6 +21,7 @@ const demoSchema = z.object({
 const contentSchema = z.object({
   logoUrl: z.string().optional(),
   mainShowcaseTitle: z.string().optional(),
+  mainShowcaseDemoUrl: z.string().optional(),
   ctaHeading: z.string().optional(),
   ctaParagraph: z.string().optional(),
   ctaButtonText: z.string().optional(),
@@ -35,6 +36,7 @@ export type Demo = z.infer<typeof demoSchema>;
 const defaultContent: ContentData = {
     logoUrl: 'https://placehold.co/120x40.png',
     mainShowcaseTitle: 'Main Showcase',
+    mainShowcaseDemoUrl: 'https://teknoverse.dev',
     ctaHeading: 'Ready to Explore Teknoverse?',
     ctaParagraph: "You've seen the glimpses, now experience the full vision. Click below to enter a new digital dimension.",
     ctaButtonText: 'Visit Teknoverse Now',
