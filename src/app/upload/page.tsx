@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, type Control, type UseFormRegister } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,6 @@ import { Trash2, PlusCircle } from 'lucide-react';
 import { getContent, updateContent, type ContentData } from '@/services/contentService';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Textarea } from '@/components/ui/textarea';
 
 const sectionSchema = z.object({
   id: z.string().optional(),
@@ -24,9 +23,7 @@ const sectionSchema = z.object({
 const demoSchema = z.object({
   id: z.string().optional(),
   title: z.string().optional(),
-  description: z.string().optional(),
-  imageUrl: z.string().optional(),
-  demoUrl: z.string().optional(),
+  sections: z.array(sectionSchema).optional(),
 });
 
 const contentFormSchema = z.object({
@@ -39,11 +36,49 @@ const contentFormSchema = z.object({
   demos: z.array(demoSchema).optional(),
 });
 
+type FormValues = z.infer<typeof contentFormSchema>;
+
+const DemoSectionsManager = ({ demoIndex, control, register }: { demoIndex: number, control: Control<FormValues>, register: UseFormRegister<FormValues> }) => {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: `demos.${demoIndex}.sections`,
+    keyName: 'key'
+  });
+
+  return (
+    <div className="space-y-4 pt-4 mt-4 border-t">
+      <Label>Demo Images</Label>
+       {fields.map((field, index) => (
+        <div key={field.key} className="flex items-start gap-4">
+          <div className="flex-grow space-y-2">
+            <div>
+              <Label htmlFor={`demos.${demoIndex}.sections.${index}.imageUrl`} className="sr-only">Image URL</Label>
+              <Input
+                id={`demos.${demoIndex}.sections.${index}.imageUrl`}
+                placeholder="Image URL"
+                {...register(`demos.${demoIndex}.sections.${index}.imageUrl`)}
+              />
+            </div>
+          </div>
+          <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+            <Trash2 className="h-4 w-4" />
+            <span className="sr-only">Remove Image</span>
+          </Button>
+        </div>
+      ))}
+      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: `${Date.now()}`, name: '', imageUrl: '' })}>
+        <PlusCircle className="mr-2 h-4 w-4" />
+        Add Image
+      </Button>
+    </div>
+  )
+}
+
 export default function UploadPage() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<ContentData>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(contentFormSchema),
     defaultValues: async () => {
       return getContent();
@@ -145,18 +180,14 @@ export default function UploadPage() {
         
         <Card>
             <CardHeader>
-                <CardTitle>Showcase Sections (Demo 1)</CardTitle>
-                <CardDescription>Manage the pages shown in the scroll animation.</CardDescription>
+                <CardTitle>Main Showcase Sections</CardTitle>
+                <CardDescription>Manage the pages shown in the main scroll animation.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 {sectionFields.map((field, index) => (
                     <div key={field.key} className="flex items-start gap-4 p-4 border rounded-lg">
                         <div className="font-bold text-lg text-muted-foreground">{index + 1}</div>
                         <div className="flex-grow space-y-4">
-                            <div>
-                                <Label htmlFor={`sections.${index}.name`}>Section Name</Label>
-                                <Input id={`sections.${index}.name`} {...form.register(`sections.${index}.name`)} />
-                            </div>
                             <div>
                                 <Label htmlFor={`sections.${index}.imageUrl`}>Image URL</Label>
                                 <Input id={`sections.${index}.imageUrl`} {...form.register(`sections.${index}.imageUrl`)} />
@@ -177,38 +208,27 @@ export default function UploadPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Demos</CardTitle>
-            <CardDescription>Manage the interactive demos displayed on the homepage.</CardDescription>
+            <CardTitle>Additional Demos</CardTitle>
+            <CardDescription>Manage additional showcase animations to appear on the homepage.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {demoFields.map((field, index) => (
-              <div key={field.key} className="flex items-start gap-4 p-4 border rounded-lg">
-                <div className="font-bold text-lg text-muted-foreground">{index + 1}</div>
-                <div className="flex-grow space-y-4">
-                  <div>
-                    <Label htmlFor={`demos.${index}.title`}>Demo Title</Label>
-                    <Input id={`demos.${index}.title`} {...form.register(`demos.${index}.title`)} />
+              <Card key={field.key} className="p-4 border bg-muted/20">
+                <CardHeader className="p-0 flex flex-row items-center justify-between">
+                  <div className="flex-grow pr-4">
+                      <Label htmlFor={`demos.${index}.title`}>Demo Title</Label>
+                      <Input id={`demos.${index}.title`} {...form.register(`demos.${index}.title`)} placeholder="e.g., Product Features Showcase" />
                   </div>
-                  <div>
-                    <Label htmlFor={`demos.${index}.description`}>Description</Label>
-                    <Textarea id={`demos.${index}.description`} {...form.register(`demos.${index}.description`)} />
-                  </div>
-                  <div>
-                    <Label htmlFor={`demos.${index}.imageUrl`}>Image URL</Label>
-                    <Input id={`demos.${index}.imageUrl`} {...form.register(`demos.${index}.imageUrl`)} />
-                  </div>
-                  <div>
-                    <Label htmlFor={`demos.${index}.demoUrl`}>Demo URL</Label>
-                    <Input id={`demos.${index}.demoUrl`} {...form.register(`demos.${index}.demoUrl`)} />
-                  </div>
-                </div>
-                <Button type="button" variant="ghost" size="icon" onClick={() => removeDemo(index)}>
-                  <Trash2 className="h-4 w-4" />
-                  <span className="sr-only">Remove Demo</span>
-                </Button>
-              </div>
+                   <Button type="button" variant="destructive" onClick={() => removeDemo(index)}>
+                      <Trash2 className="mr-2 h-4 w-4" /> Remove Demo
+                  </Button>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <DemoSectionsManager demoIndex={index} control={form.control} register={form.register} />
+                </CardContent>
+              </Card>
             ))}
-            <Button type="button" variant="outline" onClick={() => appendDemo({ id: `${Date.now()}`, title: '', description: '', imageUrl: '', demoUrl: '' })}>
+            <Button type="button" variant="outline" onClick={() => appendDemo({ id: `${Date.now()}`, title: '', sections: [] })}>
               <PlusCircle className="mr-2 h-4 w-4" />
               Add New Demo
             </Button>

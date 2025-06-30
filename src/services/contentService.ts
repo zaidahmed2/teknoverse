@@ -14,9 +14,7 @@ const sectionSchema = z.object({
 const demoSchema = z.object({
     id: z.string().optional(),
     title: z.string().optional(),
-    description: z.string().optional(),
-    imageUrl: z.string().optional(),
-    demoUrl: z.string().optional(),
+    sections: z.array(sectionSchema).optional(),
 });
 
 const contentSchema = z.object({
@@ -89,7 +87,10 @@ export async function updateContent(data: ContentData) {
     const dataToSave = {
       ...data,
       sections: data.sections || [],
-      demos: data.demos || [],
+      demos: data.demos?.map(demo => ({
+        ...demo,
+        sections: demo.sections || []
+      })) || [],
     };
     const validatedData = contentSchema.parse(dataToSave);
     await setDoc(contentDocRef, validatedData);
