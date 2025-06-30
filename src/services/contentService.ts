@@ -14,11 +14,13 @@ const sectionSchema = z.object({
 const demoSchema = z.object({
     id: z.string().optional(),
     title: z.string().optional(),
+    demoUrl: z.string().optional(),
     sections: z.array(sectionSchema).optional(),
 });
 
 const contentSchema = z.object({
   logoUrl: z.string().optional(),
+  mainShowcaseTitle: z.string().optional(),
   ctaHeading: z.string().optional(),
   ctaParagraph: z.string().optional(),
   ctaButtonText: z.string().optional(),
@@ -32,6 +34,7 @@ export type Demo = z.infer<typeof demoSchema>;
 
 const defaultContent: ContentData = {
     logoUrl: 'https://placehold.co/120x40.png',
+    mainShowcaseTitle: 'Main Showcase',
     ctaHeading: 'Ready to Explore Teknoverse?',
     ctaParagraph: "You've seen the glimpses, now experience the full vision. Click below to enter a new digital dimension.",
     ctaButtonText: 'Visit Teknoverse Now',
@@ -65,6 +68,7 @@ export const getContent = cache(async (): Promise<ContentData> => {
       console.error('Invalid content structure in Firestore:', result.error);
       return { ...defaultContent, ...docSnap.data() };
     } else {
+      await setDoc(contentDocRef, defaultContent);
       return defaultContent;
     }
   } catch (error) {

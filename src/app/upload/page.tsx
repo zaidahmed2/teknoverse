@@ -16,18 +16,19 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const sectionSchema = z.object({
   id: z.string().optional(),
-  name: z.string().optional(),
   imageUrl: z.string().optional(),
 });
 
 const demoSchema = z.object({
   id: z.string().optional(),
   title: z.string().optional(),
+  demoUrl: z.string().optional(),
   sections: z.array(sectionSchema).optional(),
 });
 
 const contentFormSchema = z.object({
   logoUrl: z.string().optional(),
+  mainShowcaseTitle: z.string().optional(),
   ctaHeading: z.string().optional(),
   ctaParagraph: z.string().optional(),
   ctaButtonText: z.string().optional(),
@@ -66,7 +67,7 @@ const DemoSectionsManager = ({ demoIndex, control, register }: { demoIndex: numb
           </Button>
         </div>
       ))}
-      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: `${Date.now()}`, name: '', imageUrl: '' })}>
+      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: `${Date.now()}`, imageUrl: '' })}>
         <PlusCircle className="mr-2 h-4 w-4" />
         Add Image
       </Button>
@@ -184,13 +185,18 @@ export default function UploadPage() {
                 <CardDescription>Manage the pages shown in the main scroll animation.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+                <div>
+                    <Label htmlFor="mainShowcaseTitle">Showcase Title</Label>
+                    <Input id="mainShowcaseTitle" {...form.register('mainShowcaseTitle')} placeholder="e.g., Our Main Features"/>
+                </div>
+                <Separator/>
                 {sectionFields.map((field, index) => (
                     <div key={field.key} className="flex items-start gap-4 p-4 border rounded-lg">
                         <div className="font-bold text-lg text-muted-foreground">{index + 1}</div>
                         <div className="flex-grow space-y-4">
                             <div>
-                                <Label htmlFor={`sections.${index}.imageUrl`}>Image URL</Label>
-                                <Input id={`sections.${index}.imageUrl`} {...form.register(`sections.${index}.imageUrl`)} />
+                                <Label htmlFor={`sections.${index}.imageUrl`} className="sr-only">Image URL</Label>
+                                <Input id={`sections.${index}.imageUrl`} {...form.register(`sections.${index}.imageUrl`)} placeholder="Image URL" />
                             </div>
                         </div>
                         <Button type="button" variant="ghost" size="icon" onClick={() => removeSection(index)}>
@@ -199,7 +205,7 @@ export default function UploadPage() {
                         </Button>
                     </div>
                 ))}
-                 <Button type="button" variant="outline" onClick={() => appendSection({ id: `${Date.now()}`, name: '', imageUrl: '' })}>
+                 <Button type="button" variant="outline" onClick={() => appendSection({ id: `${Date.now()}`, imageUrl: '' })}>
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Add Section
                 </Button>
@@ -214,10 +220,16 @@ export default function UploadPage() {
           <CardContent className="space-y-6">
             {demoFields.map((field, index) => (
               <Card key={field.key} className="p-4 border bg-muted/20">
-                <CardHeader className="p-0 flex flex-row items-center justify-between">
-                  <div className="flex-grow pr-4">
-                      <Label htmlFor={`demos.${index}.title`}>Demo Title</Label>
-                      <Input id={`demos.${index}.title`} {...form.register(`demos.${index}.title`)} placeholder="e.g., Product Features Showcase" />
+                <CardHeader className="p-0 flex flex-row items-center justify-between gap-4">
+                  <div className="flex-grow pr-4 space-y-4">
+                      <div>
+                        <Label htmlFor={`demos.${index}.title`}>Demo Title</Label>
+                        <Input id={`demos.${index}.title`} {...form.register(`demos.${index}.title`)} placeholder="e.g., Product Features Showcase" />
+                      </div>
+                      <div>
+                        <Label htmlFor={`demos.${index}.demoUrl`}>Demo URL</Label>
+                        <Input id={`demos.${index}.demoUrl`} {...form.register(`demos.${index}.demoUrl`)} placeholder="https://example.com" />
+                      </div>
                   </div>
                    <Button type="button" variant="destructive" onClick={() => removeDemo(index)}>
                       <Trash2 className="mr-2 h-4 w-4" /> Remove Demo
